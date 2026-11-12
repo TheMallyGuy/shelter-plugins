@@ -2,13 +2,15 @@
   "devDependencies": {
     "@uwu/lune": "^1.6.2",
     "@uwu/shelter-defs": "^1.4.1",
-    "esbuild": "^0.28.2"
+    "esbuild": "^0.28.2",
+    "typescript": "^6.0.3"
   },
   "type": "module",
   "workspaces": [
     "plugins/*"
   ],
   "scripts": {
+    "typecheck": "tsc -p .",
     "build:ts": "node scripts/build-plugin-ts.mjs",
     "build": "node scripts/build-plugin-ts.mjs && lune ci"
   }

@@ -1,0 +1,16 @@
+{
+  "include": ["plugins-ts/**/*"],
+  "compilerOptions": {
+    "target": "ESNext",
+    "module": "ESNext",
+    "moduleResolution": "node",
+    "ignoreDeprecations": "6.0",
+    "jsx": "preserve",
+    "jsxImportSource": "solid-js",
+    "types": ["@uwu/shelter-defs"],
+    "strict": true,
+    "noEmit": true,
+    "skipLibCheck": true,
+    "isolatedModules": true
+  }
+}
