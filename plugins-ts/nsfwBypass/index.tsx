@@ -1,5 +1,5 @@
 const {
-	flux: { intercept, getDispatcher, storesFlat: stores },
+	flux: { intercept, dispatcher, storesFlat: stores },
 	ui: { injectCss }
 } = shelter;
 
@@ -75,7 +75,7 @@ export function onLoad() {
 	const me = stores.UserStore.getCurrentUser();
 	if (me) {
 		spoofUser(me);
-		getDispatcher().then((d: any) => d.dispatch({ type: "CURRENT_USER_UPDATE", user: me }));
+		dispatcher?.dispatch({ type: "CURRENT_USER_UPDATE", user: me });
 	}
 
 	const ch = Object.values(stores.ChannelStore.getMutableGuildChannelsForGuild?.(stores.SelectedGuildStore?.getGuildId?.() ?? "") ?? {})[0]
