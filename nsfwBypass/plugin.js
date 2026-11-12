@@ -2,7 +2,7 @@
 
 "use strict";
 
-//#region plugins/nsfwBypass/index.js
+//#region plugins/nsfwBypass/index.jsx
 const { flux: { intercept: R, dispatcher: h, storesFlat: o }, ui: { injectCss: f } } = shelter, S = {
 	client_build_number: 88876,
 	browser_user_agent: "",
