@@ -12,6 +12,7 @@
   "scripts": {
     "typecheck": "tsc -p .",
     "build:ts": "node scripts/build-plugin-ts.mjs",
+    "dev": "node scripts/build-plugin-ts.mjs --watch",
     "build": "node scripts/build-plugin-ts.mjs && lune ci"
   }
 }
