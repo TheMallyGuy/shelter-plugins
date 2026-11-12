@@ -17,6 +17,9 @@ importers:
       esbuild:
         specifier: ^0.28.2
         version: 0.28.2
+      solid-js:
+        specifier: 1.6.16
+        version: 1.6.16
       typescript:
         specifier: ^6.0.3
         version: 6.0.3

@@ -1,6 +1,6 @@
 import { build, context } from "esbuild";
 import { spawn } from "node:child_process";
-import { cpSync, mkdirSync, readdirSync } from "node:fs";
+import { cpSync, mkdirSync, readdirSync, rmSync } from "node:fs";
 import { join } from "node:path";
 
 const SRC = "plugins-ts", OUT = "plugins";
@@ -12,6 +12,7 @@ for (const name of readdirSync(SRC, { withFileTypes: true }).filter((d) => d.isD
 	const entries = readdirSync(dir).filter((f) => /\.(tsx?|jsx)$/.test(f));
 
 	mkdirSync(join(OUT, name), { recursive: true });
+	for (const f of readdirSync(join(OUT, name))) rmSync(join(OUT, name, f), { recursive: true, force: true });
 	cpSync(join(dir, "plugin.json"), join(OUT, name, "plugin.json"));
 
 	const opts = {
@@ -21,7 +22,8 @@ for (const name of readdirSync(SRC, { withFileTypes: true }).filter((d) => d.isD
 		target: "esnext",
 		jsx: "preserve",
 		bundle: false,
-		outExtension: { ".js": ".js" },
+		// .jsx so lune runs its Solid JSX transform on the preserved JSX.
+		outExtension: { ".js": ".jsx" },
 		minify: true
 	};
 
@@ -31,4 +33,4 @@ for (const name of readdirSync(SRC, { withFileTypes: true }).filter((d) => d.isD
 
 console.log("ts -> plugins done!");
 
-if (devPlugin) spawn("lune", ["dev"], { cwd: join(OUT, devPlugin), stdio: "inherit", shell: true });
+if (devPlugin) spawn("lune dev", { cwd: join(OUT, devPlugin), stdio: "inherit", shell: true });
