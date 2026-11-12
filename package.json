@@ -9,7 +9,7 @@
     "plugins/*"
   ],
   "scripts": {
-    "build:ts": "node scripts-build-ts.mjs",
-    "build": "node scripts-build-ts.mjs && lune ci"
+    "build:ts": "node scripts/build-plugin-ts.mjs",
+    "build": "node scripts/build-plugin-ts.mjs && lune ci"
   }
 }
