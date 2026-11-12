@@ -3,7 +3,6 @@
   "compilerOptions": {
     "target": "ESNext",
     "module": "ESNext",
-    "moduleResolution": "node",
     "ignoreDeprecations": "6.0",
     "jsx": "preserve",
     "jsxImportSource": "solid-js",
@@ -11,6 +10,7 @@
     "strict": true,
     "noEmit": true,
     "skipLibCheck": true,
-    "isolatedModules": true
+    "isolatedModules": true,
+    "moduleDetection": "force"
   }
 }
