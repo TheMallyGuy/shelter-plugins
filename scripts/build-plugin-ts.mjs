@@ -5,7 +5,13 @@ import { join } from "node:path";
 
 const SRC = "plugins-ts", OUT = "plugins";
 const watchIdx = process.argv.indexOf("--watch");
-const devPlugin = watchIdx === -1 ? null : (process.argv[watchIdx + 1] ?? "folderGroups");
+const devPlugin = watchIdx === -1 ? null : process.argv[watchIdx + 1];
+
+if (watchIdx !== -1 && !devPlugin) {
+	const names = readdirSync(SRC, { withFileTypes: true }).filter((d) => d.isDirectory()).map((d) => d.name);
+	console.error(`Usage: pnpm dev <plugin>   (one of: ${names.join(", ")})`);
+	process.exit(1);
+}
 
 for (const name of readdirSync(SRC, { withFileTypes: true }).filter((d) => d.isDirectory()).map((d) => d.name)) {
 	const dir = join(SRC, name);
