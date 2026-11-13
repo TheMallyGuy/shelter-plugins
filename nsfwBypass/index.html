@@ -18,6 +18,50 @@
           width: auto;
           display: block;
         }
+      
+        :root {
+          --logo-spring: linear(0, 0.0188, 0.0679, 0.1374, 0.2195, 0.308, 0.3978, 0.4856, 0.5686, 0.6452, 0.7142, 0.7753, 0.8283, 0.8735, 0.9113, 0.9423, 0.9671, 0.9866, 1.0014, 1.0123, 1.0198, 1.0247, 1.0274, 1.0283, 1.0281, 1.0268, 1.025, 1.0227, 1.0202, 1.0177, 1.0152, 1.0128, 1.0106, 1.0085, 1.0068, 1.0052, 1.0039, 1.0028, 1.0018, 1.0011, 1.0005, 1, 0.9997, 0.9995, 0.9993, 0.9992, 0.9992, 0.9992, 0.9992, 0.9993, 0.9993);
+        }
+      
+        @keyframes plugin-in-drop {
+          from {
+            opacity: 0;
+            transform: translateY(-2.5rem);
+          }
+        }
+      
+        @keyframes plugin-in-diagonal {
+          from {
+            opacity: 0;
+            transform: translate(-2.5rem, 2.5rem);
+          }
+        }
+      
+        @keyframes plugin-in-pop {
+          from {
+            opacity: 0;
+            transform: scale(0.6);
+          }
+        }
+      
+        @media (prefers-reduced-motion: no-preference) {
+          :root[data-logo] :is(.plugin, .plugin-main > .plugin-desc, .plugin-main > .plugin-link) {
+            animation: var(--plugin-in) 0.83s var(--logo-spring) both;
+            animation-delay: calc(0.15s + var(--i, 0) * 0.1s);
+          }
+      
+          :root[data-logo="1"] {
+            --plugin-in: plugin-in-drop;
+          }
+      
+          :root[data-logo="2"] {
+            --plugin-in: plugin-in-diagonal;
+          }
+      
+          :root[data-logo="3"] {
+            --plugin-in: plugin-in-pop;
+          }
+        }
       </style>
       
       <div class="autosize header">
@@ -776,8 +820,15 @@
       <script>
         {
           const variants = document.querySelectorAll("template.logo-variant");
-          const pick = variants[Math.floor(Math.random() * variants.length)];
-          document.querySelector(".header .logo").append(pick.content.cloneNode(true));
+          const n = Math.floor(Math.random() * variants.length);
+          document.querySelector(".header .logo").append(variants[n].content.cloneNode(true));
+          document.documentElement.dataset.logo = n + 1;
+      
+          document.addEventListener("DOMContentLoaded", () => {
+            document
+              .querySelectorAll(".plugin, .plugin-main > .plugin-desc, .plugin-main > .plugin-link")
+              .forEach((el, i) => el.style.setProperty("--i", i));
+          });
         }
       </script>    </nav>
     <main>
@@ -845,14 +896,14 @@
           min-height: 100vh;
         }
       
-        body > main,
-        main > .autosize {
+        body>main,
+        main>.autosize {
           flex: 1;
           display: flex;
           flex-direction: column;
         }
       
-        main > .autosize {
+        main>.autosize {
           width: 100%;
           box-sizing: border-box;
         }
@@ -894,6 +945,48 @@
           height: auto;
         }
       
+        .footer-wordmark.is-armed path {
+          transform: translateY(140px);
+          transition: transform 0.83s var(--logo-spring, cubic-bezier(0.2, 0.9, 0.3, 1.1));
+        }
+      
+        .footer-wordmark.is-armed.is-shown path {
+          transform: none;
+        }
+      
+        .footer-wordmark path:nth-of-type(2) {
+          transition-delay: 0.1s;
+        }
+      
+        .footer-wordmark path:nth-of-type(3) {
+          transition-delay: 0.2s;
+        }
+      
+        .footer-wordmark path:nth-of-type(4) {
+          transition-delay: 0.3s;
+        }
+      
+        .footer-wordmark path:nth-of-type(5) {
+          transition-delay: 0.4s;
+        }
+      
+        .footer-wordmark path:nth-of-type(6) {
+          transition-delay: 0.5s;
+        }
+      
+        .footer-wordmark path:nth-of-type(7) {
+          transition-delay: 0.6s;
+        }
+      
+        /* sparkles land last */
+        .footer-wordmark path:nth-of-type(8) {
+          transition-delay: 0.75s;
+        }
+      
+        .footer-wordmark path:nth-of-type(9) {
+          transition-delay: 0.85s;
+        }
+      
         .footer-wordmark:focus-visible {
           outline: 2px solid var(--footer-link);
           outline-offset: 6px;
@@ -904,9 +997,11 @@
       <footer class="footer">
         <div class="footer-meta">
           <span>Site built with <a href="https://shelter.uwu.network/guides/lune-ssg">Lune 1.6.3</a></span>
-          <span>2026-11-13 05:58:05 · d5aacdb</span>
+          <span>2026-11-13 08:28:06 · 166d27d</span>
         </div>
-        <a class="a-reset footer-wordmark" href="https://shelter.uwu.network/guides/lune-ssg" aria-label="Lune"><svg width="510" height="136" viewBox="0 0 510 136" fill="none" xmlns="http://www.w3.org/2000/svg">
+      
+        <a class="a-reset footer-wordmark" href="https://shelter.uwu.network/guides/lune-ssg"
+          aria-label="Lune"><svg width="510" height="136" viewBox="0 0 510 136" fill="none" xmlns="http://www.w3.org/2000/svg">
       <path d="M19.3636 14.7863V107.877H0V14.7863H19.3636Z" fill="#CCFFED"/>
       <path d="M79.6477 78.1499V38.059H99.0114V107.877H80.4205V95.1954H79.6932C78.1174 99.2863 75.4962 102.574 71.8295 105.059C68.1932 107.544 63.7538 108.786 58.5114 108.786C53.8447 108.786 49.7386 107.726 46.1932 105.604C42.6477 103.483 39.875 100.468 37.875 96.559C35.9053 92.6499 34.9053 87.9681 34.875 82.5136V38.059H54.2386V79.059C54.2689 83.1802 55.375 86.4378 57.5568 88.8317C59.7386 91.2257 62.6629 92.4227 66.3295 92.4227C68.6629 92.4227 70.8447 91.8924 72.875 90.8317C74.9053 89.7408 76.5417 88.1348 77.7841 86.0136C79.0568 83.8923 79.678 81.2711 79.6477 78.1499Z" fill="#CCFFED"/>
       <path d="M133.864 67.5136V107.877H114.5V38.059H132.955V50.3772H133.773C135.318 46.3166 137.909 43.1045 141.545 40.7408C145.182 38.3469 149.591 37.1499 154.773 37.1499C159.621 37.1499 163.848 38.2105 167.455 40.3317C171.061 42.453 173.864 45.4833 175.864 49.4227C177.864 53.3317 178.864 57.9984 178.864 63.4227V107.877H159.5V66.8772C159.53 62.6045 158.439 59.2711 156.227 56.8772C154.015 54.453 150.97 53.2408 147.091 53.2408C144.485 53.2408 142.182 53.8014 140.182 54.9227C138.212 56.0439 136.667 57.6802 135.545 59.8317C134.455 61.953 133.894 64.5136 133.864 67.5136Z" fill="#CCFFED"/>
@@ -919,8 +1014,29 @@
       </svg>
       </a>
       </footer>
-      <!-- Hello, friend! You found an easter egg! -- Hazel -->
       
+      <script>
+        {
+          const mark = document.querySelector(".footer-wordmark");
+      
+          if (mark && "IntersectionObserver" in window && !matchMedia("(prefers-reduced-motion: reduce)").matches) {
+            mark.classList.add("is-armed");
+      
+            const io = new IntersectionObserver(
+              (entries) => {
+                if (!entries.some((e) => e.isIntersecting)) return;
+                mark.classList.add("is-shown");
+                io.disconnect();
+              },
+              { threshold: 0.5 },
+            );
+      
+            io.observe(mark);
+          }
+        }
+      </script>
+      
+      <!-- Hello, friend! You found an easter egg! -- Hazel -->
       </div>
     </main>
 
