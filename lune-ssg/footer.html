@@ -18,14 +18,14 @@
     min-height: 100vh;
   }
 
-  body > main,
-  main > .autosize {
+  body>main,
+  main>.autosize {
     flex: 1;
     display: flex;
     flex-direction: column;
   }
 
-  main > .autosize {
+  main>.autosize {
     width: 100%;
     box-sizing: border-box;
   }
@@ -67,6 +67,48 @@
     height: auto;
   }
 
+  .footer-wordmark.is-armed path {
+    transform: translateY(140px);
+    transition: transform 0.83s var(--logo-spring, cubic-bezier(0.2, 0.9, 0.3, 1.1));
+  }
+
+  .footer-wordmark.is-armed.is-shown path {
+    transform: none;
+  }
+
+  .footer-wordmark path:nth-of-type(2) {
+    transition-delay: 0.1s;
+  }
+
+  .footer-wordmark path:nth-of-type(3) {
+    transition-delay: 0.2s;
+  }
+
+  .footer-wordmark path:nth-of-type(4) {
+    transition-delay: 0.3s;
+  }
+
+  .footer-wordmark path:nth-of-type(5) {
+    transition-delay: 0.4s;
+  }
+
+  .footer-wordmark path:nth-of-type(6) {
+    transition-delay: 0.5s;
+  }
+
+  .footer-wordmark path:nth-of-type(7) {
+    transition-delay: 0.6s;
+  }
+
+  /* sparkles land last */
+  .footer-wordmark path:nth-of-type(8) {
+    transition-delay: 0.75s;
+  }
+
+  .footer-wordmark path:nth-of-type(9) {
+    transition-delay: 0.85s;
+  }
+
   .footer-wordmark:focus-visible {
     outline: 2px solid var(--footer-link);
     outline-offset: 6px;
@@ -79,6 +121,30 @@
     <span>Site built with <a href="https://shelter.uwu.network/guides/lune-ssg">Lune {{build.version}}</a></span>
     <span>{{build.time}}{{#if build.commit}} · {{build.commit}}{{/if}}</span>
   </div>
-  <a class="a-reset footer-wordmark" href="https://shelter.uwu.network/guides/lune-ssg" aria-label="Lune">{{>lune_logo}}</a>
+
+  <a class="a-reset footer-wordmark" href="https://shelter.uwu.network/guides/lune-ssg"
+    aria-label="Lune">{{>lune_logo}}</a>
 </footer>
+
+<script>
+  {
+    const mark = document.querySelector(".footer-wordmark");
+
+    if (mark && "IntersectionObserver" in window && !matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      mark.classList.add("is-armed");
+
+      const io = new IntersectionObserver(
+        (entries) => {
+          if (!entries.some((e) => e.isIntersecting)) return;
+          mark.classList.add("is-shown");
+          io.disconnect();
+        },
+        { threshold: 0.5 },
+      );
+
+      io.observe(mark);
+    }
+  }
+</script>
+
 <!-- Hello, friend! You found an easter egg! -- Hazel -->

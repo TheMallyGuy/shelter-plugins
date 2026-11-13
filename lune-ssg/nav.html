@@ -8,6 +8,50 @@
     width: auto;
     display: block;
   }
+
+  :root {
+    --logo-spring: linear(0, 0.0188, 0.0679, 0.1374, 0.2195, 0.308, 0.3978, 0.4856, 0.5686, 0.6452, 0.7142, 0.7753, 0.8283, 0.8735, 0.9113, 0.9423, 0.9671, 0.9866, 1.0014, 1.0123, 1.0198, 1.0247, 1.0274, 1.0283, 1.0281, 1.0268, 1.025, 1.0227, 1.0202, 1.0177, 1.0152, 1.0128, 1.0106, 1.0085, 1.0068, 1.0052, 1.0039, 1.0028, 1.0018, 1.0011, 1.0005, 1, 0.9997, 0.9995, 0.9993, 0.9992, 0.9992, 0.9992, 0.9992, 0.9993, 0.9993);
+  }
+
+  @keyframes plugin-in-drop {
+    from {
+      opacity: 0;
+      transform: translateY(-2.5rem);
+    }
+  }
+
+  @keyframes plugin-in-diagonal {
+    from {
+      opacity: 0;
+      transform: translate(-2.5rem, 2.5rem);
+    }
+  }
+
+  @keyframes plugin-in-pop {
+    from {
+      opacity: 0;
+      transform: scale(0.6);
+    }
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    :root[data-logo] :is(.plugin, .plugin-main > .plugin-desc, .plugin-main > .plugin-link) {
+      animation: var(--plugin-in) 0.83s var(--logo-spring) both;
+      animation-delay: calc(0.15s + var(--i, 0) * 0.1s);
+    }
+
+    :root[data-logo="1"] {
+      --plugin-in: plugin-in-drop;
+    }
+
+    :root[data-logo="2"] {
+      --plugin-in: plugin-in-diagonal;
+    }
+
+    :root[data-logo="3"] {
+      --plugin-in: plugin-in-pop;
+    }
+  }
 </style>
 
 <div class="autosize header">
@@ -22,7 +66,14 @@
 <script>
   {
     const variants = document.querySelectorAll("template.logo-variant");
-    const pick = variants[Math.floor(Math.random() * variants.length)];
-    document.querySelector(".header .logo").append(pick.content.cloneNode(true));
+    const n = Math.floor(Math.random() * variants.length);
+    document.querySelector(".header .logo").append(variants[n].content.cloneNode(true));
+    document.documentElement.dataset.logo = n + 1;
+
+    document.addEventListener("DOMContentLoaded", () => {
+      document
+        .querySelectorAll(".plugin, .plugin-main > .plugin-desc, .plugin-main > .plugin-link")
+        .forEach((el, i) => el.style.setProperty("--i", i));
+    });
   }
 </script>
