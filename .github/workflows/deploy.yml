@@ -3,36 +3,50 @@ name: Build and deploy
 on:
   push:
     branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
 
 jobs:
-  deploy:
+  build:
     runs-on: ubuntu-latest
-    permissions:
-      contents: write
-
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
 
-      - name: Setup Node
-        uses: actions/setup-node@v2
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 12
+
+      - uses: actions/setup-node@v4
         with:
           node-version: 24
+          cache: pnpm
 
-      - name: Deps
-        run: |
-          npm install --global pnpm
-          pnpm i
+      - run: pnpm i --frozen-lockfile
 
-      - name: Build plugin(s)
-        run: pnpm lune ci
+      - run: pnpm build:ts
 
-      - name: Run SSG
-        run: |
-          cp -r static/* dist || true
-          pnpm lune ssg ci
+      - run: pnpm lune ci
 
-      - name: Deploy to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v3
+      - run: pnpm lune ssg ci
+
+      - uses: actions/upload-pages-artifact@v3
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./dist
+          path: dist
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
