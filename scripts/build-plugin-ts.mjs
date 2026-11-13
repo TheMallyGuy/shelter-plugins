@@ -1,6 +1,6 @@
 import { build, context } from "esbuild";
 import { spawn } from "node:child_process";
-import { cpSync, mkdirSync, readdirSync, rmSync } from "node:fs";
+import { existsSync, mkdirSync, readdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 
 const SRC = "plugins-ts", OUT = "plugins";
@@ -15,20 +15,32 @@ if (watchIdx !== -1 && !devPlugin) {
 
 for (const name of readdirSync(SRC, { withFileTypes: true }).filter((d) => d.isDirectory()).map((d) => d.name)) {
 	const dir = join(SRC, name);
-	const entries = readdirSync(dir).filter((f) => /\.(tsx?|jsx)$/.test(f));
 
-	mkdirSync(join(OUT, name), { recursive: true });
-	for (const f of readdirSync(join(OUT, name))) rmSync(join(OUT, name, f), { recursive: true, force: true });
-	cpSync(join(dir, "plugin.json"), join(OUT, name, "plugin.json"));
+	const entry = readdirSync(dir).find((f) => /^index\.(tsx?|jsx)$/.test(f));
+	if (!entry) {
+		console.warn(`skipping ${name}: no index.ts(x)`);
+		continue;
+	}
+
+
+	const outDir = join(OUT, name);
+	const expected = new Set(["plugin.json", "index.jsx"]);
+	mkdirSync(outDir, { recursive: true });
+
+	for (const f of readdirSync(outDir)) if (!expected.has(f)) rmSync(join(outDir, f), { recursive: true, force: true });
+
+	const manifest = readFileSync(join(dir, "plugin.json"), "utf8");
+	const outManifest = join(outDir, "plugin.json");
+	if (!existsSync(outManifest) || readFileSync(outManifest, "utf8") !== manifest) writeFileSync(outManifest, manifest);
 
 	const opts = {
-		entryPoints: entries.map((f) => join(dir, f)),
+		entryPoints: [join(dir, entry)],
 		outdir: join(OUT, name),
 		format: "esm",
 		target: "esnext",
 		jsx: "preserve",
-		bundle: false,
-		// .jsx so lune runs its Solid JSX transform on the preserved JSX.
+		bundle: true,
+		packages: "external",
 		outExtension: { ".js": ".jsx" },
 		minify: true
 	};
