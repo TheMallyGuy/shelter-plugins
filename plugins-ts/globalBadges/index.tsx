@@ -1,6 +1,6 @@
 import { loadBadges } from "./api";
 
-const { http: { intercept }, plugin: { store }, observeDom, util: { log } } = shelter;
+const { http: { intercept }, plugin: { store }, observeDom, ui: { injectCss }, util: { log } } = shelter;
 
 type CustomBadge = {
     id: string;
@@ -36,7 +36,7 @@ const toModalBadge = (b: CustomBadge) => ({
 
 const disposers: (() => void)[] = [];
 
-export async function onLoad() {
+export function onLoad() {
     if (!store.apiUrl) {
         store.apiUrl = "https://badges.equicord.org/"
     }
@@ -65,9 +65,33 @@ export async function onLoad() {
     };
 
     disposers.push(
+        injectCss(`
+            .shelter-global-badge {
+               border-radius: 50%; transform: scale(0.9);
+            }
+        `)
+    );
+
+    disposers.push(
         observeDom('img[src*="badge-icons/http"]', (img) => {
             const src = img.getAttribute("src")!;
             img.setAttribute("src", src.slice(src.indexOf("badge-icons/") + "badge-icons/".length).replace(/\.png$/, ""));
+        })
+    );
+
+    disposers.push(
+        observeDom('div[aria-label="User Badges"] > a[role="link"]', (anchor) => {
+            if (anchor.dataset.customProcessed) return;
+            anchor.dataset.customProcessed = "true";
+
+            const img = anchor.querySelector('img');
+            if (!img) return;
+
+            const src = img.getAttribute("src") || "";
+
+            if (!src.includes("cdn.discordapp.com")) { // ingores discord default cdn
+                img.classList.add("shelter-global-badge");
+            }
         })
     );
 
