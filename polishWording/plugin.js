@@ -40,9 +40,9 @@ var import_web$2 = __toESM(require_web(), 1);
 var import_web$3 = __toESM(require_web(), 1);
 var import_web$4 = __toESM(require_web(), 1);
 const _tmpl$ = /*#__PURE__*/ (0, import_web.template)(`<div><!#><!/><!#><!/></div>`, 6);
-const { plugin: { store: r }, http: { intercept: O }, ui: { SwitchItem: C, TextBox: L, Text: M, Divider: R } } = shelter;
+var { plugin: { store: r }, http: { intercept: O }, ui: { SwitchItem: C, TextBox: L, Text: M, Divider: R } } = shelter;
 O("post", /\/channels\/\d+\/messages/, (t, e) => (t.body.content = E(t.body.content), e(t)));
-const W = () => [
+var W = () => [
 	(0, import_web$4.createComponent)(C, {
 		get value() {
 			return r.fixApostrophes;
@@ -105,11 +105,10 @@ const W = () => [
 	(0, import_web$4.createComponent)(R, {})
 ];
 function E(t) {
-	let e = t;
-	const o = /```[\s\S]*?```|`[\s\S]*?`/g, n = [];
+	let e = t, o = /```[\s\S]*?```|`[\s\S]*?`/g, n = [];
 	return e = e.replace(o, (i) => (n.push(i), `__CODE_BLOCK_${n.length - 1}__`)), (r.fixApostrophes || r.expandContractions) && (e = F(e)), r.fixCapitalization && (e = Z(e)), r.fixPunctuation && Math.random() * 100 < r.fixPunctuationFrequency && (e = D(e)), r.expandContractions && (e = $(e)), e = e.replace(/__CODE_BLOCK_(\d+)__/g, (i, s) => n[parseInt(s)]), e;
 }
-const v = {
+var v = {
 	"wasn't": "was not",
 	"can't": "cannot",
 	"don't": "do not",
@@ -154,45 +153,45 @@ const v = {
 	"y'all": "you all",
 	"here's": "here is"
 }, b = {};
-for (const t in v) {
-	const e = B(t.toLowerCase());
+for (let t in v) {
+	let e = B(t.toLowerCase());
 	b[e] = t;
 }
 function S(t) {
-	const e = [];
-	for (const o of t) o.match(/[a-zA-Z]/) && e.push(o === o.toUpperCase());
+	let e = [];
+	for (let o of t) o.match(/[a-zA-Z]/) && e.push(o === o.toUpperCase());
 	return e;
 }
 function P(t, e) {
 	let o = "", n = 0;
 	for (let i = 0; i < t.length; i++) {
-		const s = t[i];
+		let s = t[i];
 		if (!s.match(/[a-zA-Z]/)) {
 			o += s;
 			continue;
 		}
-		const a = e[n];
+		let a = e[n];
 		o += a ? s.toUpperCase() : s.toLowerCase(), n < e.length - 1 && n++;
 	}
 	return o;
 }
 function F(t) {
-	const e = Object.keys(b);
+	let e = Object.keys(b);
 	if (e.length === 0) return t;
-	const o = new RegExp(`\\b(${e.join("|")})\\b`, "gi");
+	let o = new RegExp(`\\b(${e.join("|")})\\b`, "gi");
 	return t.replace(o, (n) => {
-		const i = n.toLowerCase();
+		let i = n.toLowerCase();
 		if (Object.prototype.hasOwnProperty.call(b, i)) {
-			const s = b[i];
+			let s = b[i];
 			return P(s, S(n));
 		}
 		return n;
 	});
 }
 function $(t) {
-	const e = new RegExp(`\\b(${Object.keys(v).join("|")})\\b`, "gi");
+	let e = new RegExp(`\\b(${Object.keys(v).join("|")})\\b`, "gi");
 	return t.replace(e, (o) => {
-		const n = o.toLowerCase();
+		let n = o.toLowerCase();
 		return Object.prototype.hasOwnProperty.call(v, n) ? P(v[n], S(o)) : o;
 	});
 }
@@ -200,10 +199,9 @@ function B(t) {
 	return t.replace(/'/g, "");
 }
 function Z(t) {
-	const e = /((?<!\w\.\w.)(?<!\b[A-Z][a-z]\.)(?<![A-Z]\.)(?<!\.)(?<=[.?!])\s+|\n+)/, n = t.split(e).filter((s) => s != null);
-	let i = "";
+	let e = /((?<!\w\.\w.)(?<!\b[A-Z][a-z]\.)(?<![A-Z]\.)(?<!\.)(?<=[.?!])\s+|\n+)/, n = t.split(e).filter((s) => s != null), i = "";
 	for (let s = 0; s < n.length; s++) {
-		const a = n[s];
+		let a = n[s];
 		if (!e.test(a)) {
 			if (a) {
 				if (a.trim() === "") {
@@ -211,7 +209,7 @@ function Z(t) {
 					continue;
 				}
 			} else continue;
-			const A = a.match(/^\s*([\w'-]+)/), U = A ? A[1].toLowerCase() : "";
+			let A = a.match(/^\s*([\w'-]+)/), U = A ? A[1].toLowerCase() : "";
 			a.startsWith("http") ? i += a : i += a.replace(/^(\s*)(\S)/, (T, _, I) => _ + I.toUpperCase());
 		} else a && (i += a);
 	}
@@ -219,13 +217,13 @@ function Z(t) {
 }
 function D(t) {
 	if (!t) return "";
-	const e = t.split(`
+	let e = t.split(`
 `), o = [];
 	for (let n = 0; n < e.length; n++) {
-		const s = e[n].trimEnd(), a = /https?:\/\/\S+$|www\.\S+$/;
+		let s = e[n].trimEnd(), a = /https?:\/\/\S+$|www\.\S+$/;
 		if (!s) n < e.length - 1 && o.push("");
 else {
-			const m = s.slice(-1);
+			let m = s.slice(-1);
 			if (/[A-Za-z0-9]/.test(m) && !a.test(s)) {
 				o.push(s + ".");
 				continue;
