@@ -6,4 +6,7 @@ import { defineConfig } from "@uwu/lune";
 
 export default defineConfig({
   // configure lune here
+  ssg: {
+    repo_name: "Mally's shelter"
+  }
 });

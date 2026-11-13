@@ -1,0 +1,1 @@
+- Ive made these animated logos myself! feel free to just *yoink* it

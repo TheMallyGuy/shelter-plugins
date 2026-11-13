@@ -14,6 +14,7 @@
     "typecheck": "tsc -p .",
     "build:ts": "node scripts/build-plugin-ts.mjs",
     "dev": "node scripts/build-plugin-ts.mjs --watch",
-    "build": "node scripts/build-plugin-ts.mjs && lune ci"
+    "build": "node scripts/build-plugin-ts.mjs && lune ci",
+    "lune:preview": "pnpm build && pnpm lune ssg ci ."
   }
 }

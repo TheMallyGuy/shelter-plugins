@@ -1,0 +1,84 @@
+<style>
+  :root {
+    --footer-band: #1b1b1f;
+    --footer-text: #9a9aa2;
+    --footer-link: #2bfaac;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --footer-band: #121214;
+    }
+  }
+
+  /* pin the footer to the bottom edge on short pages */
+  body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+  }
+
+  body > main,
+  main > .autosize {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
+
+  main > .autosize {
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .footer-gap {
+    flex: 0 0 6rem;
+  }
+
+  .footer {
+    margin: auto 0 0;
+    padding: 2.5rem 0 2rem;
+    text-align: left;
+    font-size: 0.875rem;
+    color: var(--footer-text);
+    /* full-bleed background without overflowing the 960px column */
+    border-image: linear-gradient(var(--footer-band) 0 0) fill 0 / / 0 100vmax;
+  }
+
+  .footer a {
+    color: var(--footer-link);
+  }
+
+  .footer-meta {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 0.25rem 1.5rem;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .footer-wordmark {
+    display: block;
+    margin-top: 2.5rem;
+  }
+
+  .footer-wordmark svg {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+
+  .footer-wordmark:focus-visible {
+    outline: 2px solid var(--footer-link);
+    outline-offset: 6px;
+  }
+</style>
+
+<div class="footer-gap"></div>
+<footer class="footer">
+  <div class="footer-meta">
+    <span>Site built with <a href="https://shelter.uwu.network/guides/lune-ssg">Lune {{build.version}}</a></span>
+    <span>{{build.time}}{{#if build.commit}} · {{build.commit}}{{/if}}</span>
+  </div>
+  <a class="a-reset footer-wordmark" href="https://shelter.uwu.network/guides/lune-ssg" aria-label="Lune">{{>lune_logo}}</a>
+</footer>
+<!-- Hello, friend! You found an easter egg! -- Hazel -->
