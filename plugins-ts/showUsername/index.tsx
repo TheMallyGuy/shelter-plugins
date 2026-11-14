@@ -1,3 +1,5 @@
+// forked from https://github.com/ioj4/shelter-plugins/blob/master/plugins/show-username/index.jsx
+
 const {
   plugin: { scoped, store },
   util: { getFiber, reactFiberWalker },
@@ -6,12 +8,17 @@ const {
 
 const USERNAME_QUERY = '[id^="message-username-"] > [class*="username_"]';
 // system messages ("X just boosted the server!" etc.)
-const BOOSTERS_QUERY = '[id^="message-content-"] [class*="nameContainer_"] > [class*="username_"]';
+const BOOSTERS_QUERY =
+  '[id^="message-content-"] [class*="nameContainer_"] > [class*="username_"]';
 const QUERY = `${USERNAME_QUERY}, ${BOOSTERS_QUERY}`;
 
 function getNick(message: any): string | undefined {
-  const guildId = (storesFlat.ChannelStore as any).getChannel(message.channel_id)?.guild_id;
-  const nick = guildId && (storesFlat.GuildMemberStore as any).getNick(guildId, message.author.id);
+  const guildId = (storesFlat.ChannelStore as any).getChannel(
+    message.channel_id,
+  )?.guild_id;
+  const nick =
+    guildId &&
+    (storesFlat.GuildMemberStore as any).getNick(guildId, message.author.id);
   return nick ?? message.author.globalName ?? undefined;
 }
 
