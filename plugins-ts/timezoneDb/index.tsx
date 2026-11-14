@@ -1,11 +1,12 @@
 import { deleteTimezone, getTimezone, loadDatabaseTimezones, setTimezone, setUserDatabaseTimezone } from "./api";
+import { ButtonRow, TextSetting } from "../ui/settings";
 
 const {
   observeDom,
   flux: { storesFlat },
   plugin: { store },
   solid: { createSignal },
-  ui: { injectCss, Header, HeaderTags, TextBox, Button, ButtonColors, Divider, Space },
+  ui: { injectCss, Button, ButtonColors },
   util: { getFiber, reactFiberWalker, log },
 } = shelter;
 
@@ -35,8 +36,8 @@ const localZone = () => Intl.DateTimeFormat().resolvedOptions().timeZone;
 const myId = (): string | undefined => storesFlat.UserStore?.getCurrentUser?.()?.id;
 
 export const settings = () => {
-  const [zone, setZone] = createSignal(store.myTimezone ?? localZone());
   const [busy, setBusy] = createSignal(false);
+  const zone = () => store.myTimezone ?? localZone();
 
   const run = async (fn: () => Promise<boolean>, zoneAfter: string | null) => {
     setBusy(true);
@@ -53,25 +54,19 @@ export const settings = () => {
 
   return (
     <>
-      <Header tag={HeaderTags.H5}>Database URL</Header>
-      <TextBox
-        value={store.databaseUrl ?? ""}
-        placeholder="https://timezone.creations.works"
-        onInput={(v) => (store.databaseUrl = v || undefined)}
+      <TextSetting key="databaseUrl" label="Database URL" placeholder="https://timezone.creations.works" />
+      <TextSetting
+        key="myTimezone"
+        label="Your timezone"
+        note="IANA name, e.g. Europe/Berlin"
+        fallback={localZone()}
+        suggestions={Intl.supportedValuesOf("timeZone")}
       />
-      <Space />
-      <Header tag={HeaderTags.H5}>Your timezone (IANA, e.g. Europe/Berlin)</Header>
-      <TextBox value={zone()} list="timezone-db-zones" onInput={setZone} />
-      <datalist id="timezone-db-zones">
-        {Intl.supportedValuesOf("timeZone").map((z) => <option value={z} />)}
-      </datalist>
-      <Space />
-      <div style={{ display: "flex", gap: "8px" }}>
+      <ButtonRow>
         <Button grow disabled={busy()} onClick={() => run(() => setTimezone(zone()), zone())}>Save</Button>
         <Button grow disabled={busy()} color={ButtonColors.RED} onClick={() => run(deleteTimezone, null)}>Delete</Button>
         <Button grow disabled={busy()} color={ButtonColors.SECONDARY} onClick={() => loadDatabaseTimezones()}>Refresh</Button>
-      </div>
-      <Divider mt mb />
+      </ButtonRow>
     </>
   );
 };
