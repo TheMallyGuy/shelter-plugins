@@ -1,3 +1,3 @@
 # Mally's shelter plugins
 
-typescript is supported
+i port equicord/vencord plugins to shelter
