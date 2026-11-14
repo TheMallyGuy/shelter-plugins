@@ -1,12 +1,22 @@
 const {
   plugin: { scoped, store },
   util: { getFiber, reactFiberWalker },
+  flux: { storesFlat },
 } = shelter;
 
 const USERNAME_QUERY = '[id^="message-username-"] > [class*="username_"]';
+// system messages ("X just boosted the server!" etc.)
+const BOOSTERS_QUERY = '[id^="message-content-"] [class*="nameContainer_"] > [class*="username_"]';
+const QUERY = `${USERNAME_QUERY}, ${BOOSTERS_QUERY}`;
+
+function getNick(message: any): string | undefined {
+  const guildId = (storesFlat.ChannelStore as any).getChannel(message.channel_id)?.guild_id;
+  const nick = guildId && (storesFlat.GuildMemberStore as any).getNick(guildId, message.author.id);
+  return nick ?? message.author.globalName ?? undefined;
+}
 
 export function forceAddUsernames() {
-  for (const e of document.querySelectorAll(USERNAME_QUERY)) {
+  for (const e of document.querySelectorAll(QUERY)) {
     addUsername(e, true);
   }
 }
@@ -15,9 +25,9 @@ function addUsername(e: Element, overwrite = false) {
   if (e.querySelector(".ioj4-su") && !overwrite) return;
 
   const props = reactFiberWalker(getFiber(e), "message", true)?.pendingProps;
-  if (!props?.author || !props?.message) return;
+  if (!props?.message?.author) return;
 
-  const { nick } = props.author;
+  const nick = props.author?.nick ?? getNick(props.message);
   const { username } = props.message.author;
 
   // ?? 😭😭
@@ -59,7 +69,7 @@ export function onLoad() {
 
   // using a long living observeDom here because awaiting dispatches is a bit slower and
   // adds excessive complexity for what it's worth
-  scoped.observeDom(USERNAME_QUERY, (e) => {
+  scoped.observeDom(QUERY, (e) => {
     queueMicrotask(() => {
       addUsername(e);
     });
