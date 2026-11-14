@@ -6,6 +6,13 @@ const {
 } = shelter;
 
 const disposers: (() => void)[] = [];
+const MENTION_SELECTORS = [
+    // mentions in sent messages
+    'span.mention[class*="wrapper_"]',
+    // mentions in the message box
+    '[data-slate-inline="true"][data-slate-void="true"] span[class*="wrapper_"][role="button"]',
+].map(s => `${s}:not([data-mention-styled])`).join(", ");
+
 
 export function onLoad() {
     disposers.push( // css are pulled from https://github.com/Equicord/Equicord/blob/main/src/plugins/mentionAvatars/styles.css & https://github.com/Equicord/Equicord/blob/main/src/plugins/mentionAvatars/index.tsx
@@ -26,14 +33,17 @@ export function onLoad() {
     );
 
     disposers.push(
-        observeDom('span.mention[class*="wrapper_"]:not([data-mention-styled])', (span) => {
+        observeDom(MENTION_SELECTORS, (span) => {
             span.dataset.mentionStyled = "true";
+
 
             const fiber = getFiber(span);
 
-            const userId = reactFiberWalker(fiber, "userId", true)?.pendingProps?.userId;
+            const idOf = (p: any) => p?.userId ?? p?.element?.userId;
+            const userId = idOf(reactFiberWalker(fiber, (f) => !!idOf(f.pendingProps), true)?.pendingProps);
             const user = storesFlat.UserStore.getUser(userId);
-            if (!user) return;
+
+            if (!user) return log(["mentionAvatars: no user for", span.textContent, userId], "warn");
             const avatarUrl = user.getAvatarURL?.(undefined, 32)
                 ?? `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.png?size=32`;
 
