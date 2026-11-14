@@ -1,6 +1,6 @@
 # Mally's shelter plugins
 
-This library targets porting Equicord plugins to shelter. Mostly plugins here are either ported from shelter or forked existing plugins to make it better!
+This library targets porting Equicord plugins to shelter. Mostly plugins here are either ported from Equicord/Vencord or forked existing plugins to make it better!
 
 Install any plugin in shelter with `https://themallyguy.github.io/shelter-plugins/<plugin>/`, e.g. `https://themallyguy.github.io/shelter-plugins/decor/`.
 
