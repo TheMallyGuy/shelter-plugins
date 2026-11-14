@@ -7,8 +7,9 @@ const SRC = "plugins-ts", OUT = "plugins";
 const watchIdx = process.argv.indexOf("--watch");
 const devPlugin = watchIdx === -1 ? null : process.argv[watchIdx + 1];
 
-if (watchIdx !== -1 && !devPlugin) {
+if (watchIdx !== -1 && (!devPlugin || !existsSync(join(SRC, devPlugin)))) {
 	const names = readdirSync(SRC, { withFileTypes: true }).filter((d) => d.isDirectory()).map((d) => d.name);
+	if (devPlugin) console.error(`no such plugin: ${devPlugin}`);
 	console.error(`Usage: pnpm dev <plugin>   (one of: ${names.join(", ")})`);
 	process.exit(1);
 }
